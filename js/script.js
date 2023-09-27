@@ -1,13 +1,13 @@
-const todos = [];
-const RENDER_EVENT = 'render-todo';
-const SAVED_EVENT = 'saved-todo';
-const STORAGE_KEY = 'TODO_APPS';
+const books = [];
+const RENDER_EVENT = 'render-book';
+const SAVED_EVENT = 'saved-book';
+const STORAGE_KEY = 'book_APPS';
 
 function generateId() {
   return +new Date();
 }
 
-function generateTodoObject(id, task, author, year, isCompleted) {
+function generatebookObject(id, task, author, year, isCompleted) {
   return {
     id,
     task,
@@ -17,18 +17,18 @@ function generateTodoObject(id, task, author, year, isCompleted) {
   };
 }
 
-function findTodo(todoId) {
-  for (const todoItem of todos) {
-    if (todoItem.id === todoId) {
-      return todoItem;
+function findbook(bookId) {
+  for (const bookItem of books) {
+    if (bookItem.id === bookId) {
+      return bookItem;
     }
   }
   return null;
 }
 
-function findTodoIndex(todoId) {
-  for (const index in todos) {
-    if (todos[index].id === todoId) {
+function findbookIndex(bookId) {
+  for (const index in books) {
+    if (books[index].id === bookId) {
       return index;
     }
   }
@@ -45,7 +45,7 @@ function isStorageExist() /* boolean */ {
 
 function saveData() {
   if (isStorageExist()) {
-    const parsed /* string */ = JSON.stringify(todos);
+    const parsed /* string */ = JSON.stringify(books);
     localStorage.setItem(STORAGE_KEY, parsed);
     document.dispatchEvent(new Event(SAVED_EVENT));
   }
@@ -56,16 +56,16 @@ function loadDataFromStorage() {
   let data = JSON.parse(serializedData);
 
   if (data !== null) {
-    for (const todo of data) {
-      todos.push(todo);
+    for (const book of data) {
+      books.push(book);
     }
   }
 
   document.dispatchEvent(new Event(RENDER_EVENT));
 }
 
-function makeTodo(todoObject) {
-  const { id, task, author, year, isCompleted } = todoObject;
+function makebook(bookObject) {
+  const { id, task, author, year, isCompleted } = bookObject;
 
   const textTitle = document.createElement('h3');
   textTitle.innerText = `Judul Buku : ${task}`;
@@ -83,7 +83,7 @@ function makeTodo(todoObject) {
   const container = document.createElement('div');
   container.classList.add('item', 'shadow');
   container.append(textContainer);
-  container.setAttribute('id', `todo-${id}`);
+  container.setAttribute('id', `book-${id}`);
 
   if (isCompleted) {
     const undoButton = document.createElement('button');
@@ -96,7 +96,6 @@ function makeTodo(todoObject) {
     trashButton.classList.add('trash-button');
     trashButton.addEventListener('click', function () {
       removeTaskFromCompleted(id);
-      alert('Data berhasil di dihapus.');
     });
 
     container.append(undoButton, trashButton);
@@ -112,7 +111,6 @@ function makeTodo(todoObject) {
     trashButton.classList.add('trash-button');
     trashButton.addEventListener('click', function () {
       removeTaskFromCompleted(id);
-      alert('Data berhasil di dihapus.');
     });
 
     container.append(checkButton, trashButton);
@@ -121,50 +119,65 @@ function makeTodo(todoObject) {
   return container;
 }
 
-function addTodo() {
-  const textTodo = document.getElementById('title').value;
+function checkButton() {
+  const checkBox = document.querySelector('inputBookIsCompleted');
+  checkBox.addEventListener('checked', function () {
+    if (checkBox == isCompleted) addTaskToCompleted(id);
+  });
+}
+
+function addbook() {
+  const textbook = document.getElementById('title').value;
   const textauthor = document.getElementById('author').value;
   const textyear = document.getElementById('date').value;
+  const isCompleted = document.getElementById('inputBookIsCompleted').checked;
 
   const generatedID = generateId();
-  const todoObject = generateTodoObject(
+  const bookObject = generatebookObject(
     generatedID,
-    textTodo,
+    textbook,
     textauthor,
     textyear,
+    isCompleted,
     false,
   );
-  todos.push(todoObject);
+  books.push(bookObject);
+  Swal.fire('Selamat', 'Buku Berhasil Ditambah', 'success');
 
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
 }
 
-function addTaskToCompleted(todoId /* HTMLELement */) {
-  const todoTarget = findTodo(todoId);
+function addTaskToCompleted(bookId /* HTMLELement */) {
+  const bookTarget = findbook(bookId);
 
-  if (todoTarget == null) return;
+  if (bookTarget == null) return;
 
-  todoTarget.isCompleted = true;
+  Swal.fire('yeeyyyy', 'Buku Selesai Dibaca 😁', 'success');
+
+  bookTarget.isCompleted = true;
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
 }
 
-function removeTaskFromCompleted(todoId /* HTMLELement */) {
-  const todoTarget = findTodoIndex(todoId);
+function removeTaskFromCompleted(bookId /* HTMLELement */) {
+  const bookTarget = findbookIndex(bookId);
 
-  if (todoTarget === -1) return;
+  if (bookTarget === -1) return;
 
-  todos.splice(todoTarget, 1);
+  Swal.fire('Selamat', 'buku berhasil dihapus ', 'info');
+  books.splice(bookTarget, 1);
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
 }
 
-function undoTaskFromCompleted(todoId /* HTMLELement */) {
-  const todoTarget = findTodo(todoId);
-  if (todoTarget == null) return;
+function undoTaskFromCompleted(bookId /* HTMLELement */) {
+  const bookTarget = findbook(bookId);
+  if (bookTarget == null) return;
 
-  todoTarget.isCompleted = false;
+  Swal.fire('yaahhhh', 'Belum Selesai Dibaca 😓', 'info');
+
+  bookTarget.isCompleted = false;
   document.dispatchEvent(new Event(RENDER_EVENT));
   saveData();
 }
@@ -174,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   submitForm.addEventListener('submit', function (event) {
     event.preventDefault();
-    addTodo();
+    addbook();
   });
 
   if (isStorageExist()) {
@@ -187,20 +200,37 @@ document.addEventListener(SAVED_EVENT, () => {
 });
 
 document.addEventListener(RENDER_EVENT, function () {
-  const uncompletedTODOList = document.getElementById('todos');
-  const listCompleted = document.getElementById('completed-todos');
+  const uncompletedbookList = document.getElementById('books');
+  const listCompleted = document.getElementById('completed-books');
 
-  uncompletedTODOList.innerHTML = '';
+  uncompletedbookList.innerHTML = '';
   listCompleted.innerHTML = '';
 
-  for (const todoItem of todos) {
-    const todoElement = makeTodo(todoItem);
-    if (todoItem.isCompleted) {
-      listCompleted.append(todoElement);
+  for (const bookItem of books) {
+    const bookElement = makebook(bookItem);
+    if (bookItem.isCompleted) {
+      listCompleted.append(bookElement);
     } else {
-      uncompletedTODOList.append(todoElement);
+      uncompletedbookList.append(bookElement);
     }
   }
 });
+
+document
+  .getElementById('searchBook')
+  .addEventListener('submit', function (event) {
+    event.preventDefault();
+    const searchBook = document
+      .getElementById('searchBookTitle')
+      .value.toLowerCase();
+    const book_list = document.querySelectorAll('.inner > h3');
+    for (book of book_list) {
+      if (book.innerText.toLowerCase().includes(searchBook)) {
+        book.parentElement.parentElement.style.display = 'block';
+      } else {
+        book.parentElement.parentElement.style.display = 'none';
+      }
+    }
+  });
 
 document.getElementById('title').focus();

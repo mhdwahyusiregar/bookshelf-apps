@@ -23,9 +23,10 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 900px;
+  height: 920px;
 }
-.wrapper .container {
+.wrapper .container,
+.search-container {
   width: 1024px;
   border-radius: 20px;
   margin: 16px;
@@ -35,7 +36,8 @@ header {
   height: fit-content;
 }
 
-.container {
+.container,
+.search-container {
   margin-bottom: 8px;
 }
 .item {
@@ -95,6 +97,7 @@ input[type='date'] {
   display: inline-block;
   height: 44px;
   font-size: 18px;
+  padding-left: 1rem;
 }
 
 .btn-submit {
@@ -105,7 +108,6 @@ input[type='date'] {
   border: 2px solid #13b8a6;
   color: black;
   font-size: 24px;
-  margin-top: 20px;
   align-self: flex-end;
   cursor: pointer;
   z-index: 10;
@@ -186,7 +188,8 @@ input[type='date'],
     margin: 0;
   }
 
-  .wrapper .container {
+  .wrapper .container,
+  .search-container {
     width: 100%;
   }
 
@@ -197,4 +200,47 @@ input[type='date'],
   .form {
     width: 100%;
   }
+}
+.container > form > .input-inline #inputBookIsCompleted {
+  height: 20px;
+  width: 20px;
+}
+
+.container > form > .input-inline {
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+}
+
+.container > form > .input-inline > label {
+  color: #1a1a1a;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.search-container > form {
+  padding: 16px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr 0.5fr;
+  grid-gap: 10px;
+}
+
+.search-container > form > label {
+  display: flex;
+  text-align: center;
+}
+
+.search-container > form > input {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.search-container > form > button {
+  background-color: #13b8a6;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
 }
