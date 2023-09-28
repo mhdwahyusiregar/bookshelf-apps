@@ -129,7 +129,7 @@ function checkButton() {
 function addbook() {
   const textbook = document.getElementById('title').value;
   const textauthor = document.getElementById('author').value;
-  const textyear = document.getElementById('date').value;
+  const textyear = parseInt(document.getElementById('date').value);
   const isCompleted = document.getElementById('inputBookIsCompleted').checked;
 
   const generatedID = generateId();
